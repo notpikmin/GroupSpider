@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 )
 
@@ -49,6 +50,7 @@ func StartGroupSearch() {
 	JoinGroup(group)
 	//SaveGroupsToCheckToFile()
 	members := GetGroupMembers(group)
-
-	fmt.Println(members[0].UserId)
+	fmt.Println("members:" + strconv.Itoa(len(members)))
+	fmt.Println(members)
+	fmt.Println("ID:" + members[0].UserID)
 }
