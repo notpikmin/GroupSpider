@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
@@ -35,21 +36,24 @@ func AddCookie(name string, value string) {
 	Client.Jar.SetCookies(VRCUrl, append(Client.Jar.Cookies(VRCUrl), authCookie))
 }
 
-func MakeRequest(reqUrl string, method string) *http.Request {
-	u, _ := url.Parse(reqUrl)
-	req := http.Request{
-		Method: method,
-		URL:    u,
-	}
+func MakeRequest(reqUrl string, method string, body string, headers map[string]string) *http.Response {
+	jsonBody := []byte(body)
+	bodyReader := bytes.NewReader(jsonBody)
+	req, err := http.NewRequest(method, reqUrl, bodyReader)
+	CheckForErr(err)
 	req.Header = map[string][]string{
 		"Accept":     {"*/*"},
 		"Host":       {"vrchat.com"},
 		"User-Agent": {"Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:126.0) Gecko/20100101 Firefox/126.0"},
 	}
-	return &req
+
+	for k, v := range headers {
+		req.Header[k] = []string{v}
+	}
+	return doRequest(req)
 }
 
-func DoRequest(req *http.Request) *http.Response {
+func doRequest(req *http.Request) *http.Response {
 
 	cs := Client.Jar.Cookies(VRCUrl)
 	for _, c := range cs {
