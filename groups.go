@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -41,16 +40,24 @@ func SaveGroupsToCheckToFile() {
 	}
 }
 
+var UserIDs []string
+
 func StartGroupSearch() {
 	OpenGroupsToCheckIfExists()
 
-	fmt.Println(len(GroupsToCheck))
-	group := GroupsToCheck[0]
+	groupCount := len(GroupsToCheck)
+
+	for i := 0; i < groupCount; i++ {
+
+		CheckGroup(i)
+	}
+}
+
+func CheckGroup(index int) []GroupMember {
+	group := GroupsToCheck[index]
 	fmt.Println(group)
 	JoinGroup(group)
 	//SaveGroupsToCheckToFile()
 	members := GetGroupMembers(group)
-	fmt.Println("members:" + strconv.Itoa(len(members)))
-	fmt.Println(members)
-	fmt.Println("ID:" + members[0].UserID)
+	return members
 }

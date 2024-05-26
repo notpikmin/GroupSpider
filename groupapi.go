@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
 )
 
 func JoinGroup(id string) {
@@ -32,19 +33,21 @@ func JoinGroup(id string) {
 func GetGroupMembers(id string) []GroupMember {
 	var members []GroupMember
 	o := 0
-	var b []byte
-	c := 5
-	for i := 0; i < 1; i++ {
+	c := 100
+	for i := 0; i < 1000; i++ {
 		res := MakeRequest(BaseApi+"groups/"+id+"/members?n="+strconv.Itoa(c)+"&offset="+strconv.Itoa(o), "GET", "", nil)
 
 		o += c
 
-		fmt.Println(string(b))
 		tMember := make([]GroupMember, c)
 		err := json.NewDecoder(res.Body).Decode(&tMember)
-		CheckForErr(err)
+
+		if CheckForErr(err) || len(tMember) == 0 {
+			break
+		}
 		members = append(members, tMember...)
-		//time.Sleep(500 * time.Millisecond)
+		time.Sleep(500 * time.Millisecond)
+
 	}
 	return members
 }

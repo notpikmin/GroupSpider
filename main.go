@@ -58,7 +58,12 @@ func main() {
 	CreateClient()
 	LogInBots()
 
-	StartGroupSearch()
+	//1 thread group scraping
+	go StartGroupSearch()
+	//1 thread parsing usrids
+	//StartUserParser()
+
+	select {}
 }
 
 func LogInBots() {
