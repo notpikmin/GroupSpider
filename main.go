@@ -61,7 +61,7 @@ func main() {
 	//1 thread group scraping
 	go StartGroupSearch()
 	//1 thread parsing usrids
-	//StartUserParser()
+	go StartUserParser()
 
 	select {}
 }

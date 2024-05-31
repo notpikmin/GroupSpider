@@ -42,12 +42,13 @@ func GetGroupMembers(id string) []GroupMember {
 		tMember := make([]GroupMember, c)
 		err := json.NewDecoder(res.Body).Decode(&tMember)
 
-		if CheckForErr(err) || len(tMember) == 0 {
+		if CheckForErr(err) || len(tMember) < 5 {
 			break
 		}
 		members = append(members, tMember...)
-		time.Sleep(500 * time.Millisecond)
+		time.Sleep(time.Second)
 
 	}
+
 	return members
 }

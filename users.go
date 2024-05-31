@@ -1,6 +1,9 @@
 package main
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Badge struct {
 	AssignedAt       time.Time `json:"assignedAt"`
@@ -12,6 +15,7 @@ type Badge struct {
 	Showcased        bool      `json:"showcased"`
 	UpdatedAt        time.Time `json:"updatedAt"`
 }
+
 type User struct {
 	AllowAvatarCopying             bool     `json:"allowAvatarCopying"`
 	Badges                         []Badge  `json:"badges"`
@@ -44,4 +48,29 @@ type User struct {
 	TravelingToWorld               string   `json:"travelingToWorld"`
 	UserIcon                       string   `json:"userIcon"`
 	WorldId                        string   `json:"worldId"`
+}
+
+var LocalUsersToCheck IDList
+
+func StartUserParser() {
+
+	for {
+		time.Sleep(time.Second)
+		UserIDs.mu.Lock()
+		fmt.Println(len(UserIDs.ids))
+		LocalUsersToCheck.mu.Lock()
+		LocalUsersToCheck.ids = append(LocalUsersToCheck.ids, UserIDs.ids...)
+		LocalUsersToCheck.mu.Unlock()
+
+		UserIDs.ids = []string{}
+
+		UserIDs.mu.Unlock()
+		if len(UserIDs.ids) > 0 {
+			CheckUsers()
+		}
+	}
+}
+
+func CheckUsers() {
+
 }
