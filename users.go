@@ -55,22 +55,38 @@ var LocalUsersToCheck IDList
 func StartUserParser() {
 
 	for {
-		time.Sleep(time.Second)
+		time.Sleep(5 * time.Second)
 		UserIDs.mu.Lock()
-		fmt.Println(len(UserIDs.ids))
 		LocalUsersToCheck.mu.Lock()
 		LocalUsersToCheck.ids = append(LocalUsersToCheck.ids, UserIDs.ids...)
 		LocalUsersToCheck.mu.Unlock()
+		fmt.Printf("local: %d \n", len(LocalUsersToCheck.ids))
+
+		fmt.Printf("user: %d \n", len(UserIDs.ids))
 
 		UserIDs.ids = []string{}
 
 		UserIDs.mu.Unlock()
-		if len(UserIDs.ids) > 0 {
+		if len(LocalUsersToCheck.ids) > 0 {
 			CheckUsers()
 		}
 	}
 }
 
 func CheckUsers() {
+	LocalUsersToCheck.mu.Lock()
 
+	for i := 0; i < len(LocalUsersToCheck.ids); i++ {
+		u := GetUser(LocalUsersToCheck.ids[i])
+		HandleUser(u)
+
+		time.Sleep(2 * time.Second)
+	}
+	LocalUsersToCheck.ids = []string{}
+	LocalUsersToCheck.mu.Unlock()
+
+}
+
+func HandleUser(user User) {
+	SendEmbed(user)
 }

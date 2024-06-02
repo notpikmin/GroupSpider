@@ -5,6 +5,7 @@ import (
 	"os"
 	"strings"
 	"sync"
+	"time"
 )
 
 type IDList struct {
@@ -14,7 +15,8 @@ type IDList struct {
 
 var GroupsToCheckFile = "GroupsToCheck.txt"
 var GroupsToCheck IDList
-
+var GroupsToAddToCheckList IDList
+var GroupsChecked IDList
 var UserIDs IDList
 
 func OpenGroupsToCheckIfExists() {
@@ -51,17 +53,25 @@ func SaveGroupsToCheckToFile() {
 
 func StartGroupSearch() {
 	OpenGroupsToCheckIfExists()
-	groupCount := len(GroupsToCheck.ids)
-
-	for i := 0; i < groupCount; i++ {
-		UserIDs.mu.Lock()
-		members := CheckGroup(i)
-
-		for x := 0; x < len(members); x++ {
-			UserIDs.ids = append(UserIDs.ids, members[x].UserID)
+	for {
+		GroupsToCheck.mu.Lock()
+		for i := 0; i < len(GroupsToCheck.ids); i++ {
+			UserIDs.mu.Lock()
+			members := CheckGroup(i)
+			fmt.Println(len(members))
+			for x := 0; x < len(members); x++ {
+				UserIDs.ids = append(UserIDs.ids, members[x].UserID)
+			}
+			UserIDs.mu.Unlock()
+			fmt.Printf("Finished Checking group: %s\n", GroupsToCheck.ids[i])
 		}
-		UserIDs.mu.Unlock()
+		GroupsToAddToCheckList.mu.Lock()
+		GroupsToCheck.ids = GroupsToAddToCheckList.ids
+		GroupsToAddToCheckList.ids = []string{}
 
+		GroupsToAddToCheckList.mu.Unlock()
+		GroupsToCheck.mu.Unlock()
+		time.Sleep(time.Second)
 	}
 }
 
