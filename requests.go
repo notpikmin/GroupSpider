@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
+	"time"
 )
 
 var Client http.Client
@@ -62,6 +63,6 @@ func doRequest(req *http.Request) *http.Response {
 	response, err := Client.Do(req)
 
 	CheckForErr(err)
-
+	time.Sleep(time.Second)
 	return response
 }

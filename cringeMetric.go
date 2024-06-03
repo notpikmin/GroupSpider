@@ -18,10 +18,10 @@ type CringeItem struct {
 func CringeRate(user User) int {
 	cringeScore := 0
 
-	bio := user.Bio
+	bio := strings.ToLower(user.Bio)
 
 	for _, keyword := range CringeMetric {
-		c := strings.Count(bio, keyword.Key)
+		c := strings.Count(bio, strings.ToLower(keyword.Key))
 		cringeScore += c * keyword.Score
 	}
 
