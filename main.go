@@ -56,6 +56,7 @@ func main() {
 	err = json.Unmarshal(bUser, &BotUsers)
 	CheckForErr(err)
 	CreateClient()
+	DownloadCringeMetric()
 	LogInBots()
 
 	//1 thread group scraping

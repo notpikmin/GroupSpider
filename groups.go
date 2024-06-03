@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -35,6 +36,20 @@ func OpenGroupsToCheckIfExists() {
 		GroupsToCheck.ids[i] = strings.Trim(g, " ")
 	}
 	GroupsToCheck.mu.Unlock()
+
+}
+
+func AddGroupToCheckId(id string) {
+	if slices.Contains(GroupsChecked.ids, id) {
+		return
+	}
+	GroupsChecked.mu.Lock()
+	GroupsToAddToCheckList.mu.Lock()
+	GroupsChecked.ids = append(GroupsChecked.ids, id)
+	GroupsToAddToCheckList.ids = append(GroupsToAddToCheckList.ids, id)
+
+	GroupsToAddToCheckList.mu.Unlock()
+	GroupsChecked.mu.Unlock()
 
 }
 
@@ -71,7 +86,7 @@ func StartGroupSearch() {
 
 		GroupsToAddToCheckList.mu.Unlock()
 		GroupsToCheck.mu.Unlock()
-		time.Sleep(time.Second)
+		time.Sleep(2 * time.Second)
 	}
 }
 

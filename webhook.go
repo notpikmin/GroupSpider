@@ -2,11 +2,12 @@ package main
 
 import (
 	"github.com/gtuk/discordwebhook"
+	"strconv"
 )
 
 var username = "BioCreeper"
 
-func CreateEmbed(user User) *discordwebhook.Embed {
+func CreateEmbed(user User, score int) *discordwebhook.Embed {
 	url := "https://vrchat.com/home/user/" + user.Id
 	description := "No status"
 	if user.StatusDescription != "" {
@@ -26,11 +27,18 @@ func CreateEmbed(user User) *discordwebhook.Embed {
 		Url:     &url,
 		IconUrl: &userIcon,
 	}
-	bio := "bio"
-	fields := []discordwebhook.Field{{
-		Name:  &bio,
-		Value: &user.Bio,
-	}}
+	bio := "Bio"
+	scoreName := "Score"
+	scoreString := strconv.Itoa(score)
+
+	fields := []discordwebhook.Field{
+		{
+			Name:  &scoreName,
+			Value: &scoreString,
+		}, {
+			Name:  &bio,
+			Value: &user.Bio,
+		}}
 
 	embed := discordwebhook.Embed{
 		Title:       &user.DisplayName,
@@ -46,14 +54,18 @@ func CreateEmbed(user User) *discordwebhook.Embed {
 	return &embed
 }
 
-func SendEmbed(user User) {
-	var url = "https://discord.com/api/webhooks/1005687599286976522/6Ferdnfxy4sBFYhMWxqTQDWjJDxaueq2QuyiCQVA0G1NnnZKoCf_-Mk6eLcW8qCha8Bo"
-	embed := CreateEmbed(user)
+func SendEmbed(user User, score int) {
+	//var url = "https://discord.com/api/webhooks/1005687599286976522/6Ferdnfxy4sBFYhMWxqTQDWjJDxaueq2QuyiCQVA0G1NnnZKoCf_-Mk6eLcW8qCha8Bo"
+	var url = "https://discord.com/api/webhooks/1246980704370163724/lJAKIEzicMkPhynEx7SAoEFxKc5MDNcSUTkGI-rFPX1B041_oqLvdUTAF6888Yu9x3FI"
+
+	embed := CreateEmbed(user, score)
 	message := discordwebhook.Message{
 		Username: &username,
 		Embeds:   &[]discordwebhook.Embed{*embed},
 	}
 
 	err := discordwebhook.SendMessage(url, message)
+
 	CheckForErr(err)
+
 }

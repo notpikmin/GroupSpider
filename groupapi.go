@@ -46,7 +46,7 @@ func GetGroupMembers(id string) []GroupMember {
 			break
 		}
 		members = append(members, tMember...)
-		time.Sleep(time.Second)
+		time.Sleep(2 * time.Second)
 
 	}
 
