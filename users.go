@@ -46,7 +46,7 @@ func CheckUsers() {
 
 		UsersChecked.mu.Unlock()
 
-		time.Sleep(2 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 	LocalUsersToCheck.ids = []string{}
 	LocalUsersToCheck.mu.Unlock()

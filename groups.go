@@ -34,6 +34,8 @@ func OpenGroupsToCheckIfExists() {
 	GroupsToCheck.ids = strings.Split(string(f), "\n")
 	for i, g := range GroupsToCheck.ids {
 		GroupsToCheck.ids[i] = strings.Trim(g, " ")
+		GroupsToCheck.ids[i] = strings.Trim(g, "\r")
+
 	}
 	GroupsToCheck.mu.Unlock()
 
@@ -79,6 +81,8 @@ func StartGroupSearch() {
 			}
 			UserIDs.mu.Unlock()
 			fmt.Printf("Finished Checking group: %s\n", GroupsToCheck.ids[i])
+			time.Sleep(2 * time.Second)
+
 		}
 		GroupsToAddToCheckList.mu.Lock()
 		GroupsToCheck.ids = GroupsToAddToCheckList.ids
@@ -86,7 +90,7 @@ func StartGroupSearch() {
 
 		GroupsToAddToCheckList.mu.Unlock()
 		GroupsToCheck.mu.Unlock()
-		time.Sleep(2 * time.Second)
+		time.Sleep(3 * time.Second)
 	}
 }
 
