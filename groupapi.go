@@ -21,6 +21,9 @@ func JoinGroup(id string) {
 	case 401:
 		fmt.Println("Not logged in group join failed")
 		break
+	case 403:
+		fmt.Println("in too mny groups")
+		break
 	case 404:
 		fmt.Println("Group:" + id + ", not found")
 		break
@@ -29,7 +32,29 @@ func JoinGroup(id string) {
 
 	}
 }
+func LeaveGroup(id string) {
+	res := MakeRequest(BaseApi+"groups/"+id+"/leave", "POST", "", nil)
+	switch res.StatusCode {
+	case 200:
+		fmt.Println("left group: " + id + ",successfully")
+		break
+	case 400:
+		fmt.Println("Already A member of: " + id)
+		break
+	case 401:
+		fmt.Println("Not logged in group join failed")
+		break
+	case 403:
+		fmt.Println("in too mny groups")
+		break
+	case 404:
+		fmt.Println("Group:" + id + ", not found")
+		break
+	default:
+		fmt.Println("Unknown status code:" + strconv.Itoa(res.StatusCode))
 
+	}
+}
 func GetGroupMembers(id string) []GroupMember {
 	var members []GroupMember
 	o := 0

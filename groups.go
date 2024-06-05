@@ -100,5 +100,6 @@ func CheckGroup(index int) []GroupMember {
 	JoinGroup(group)
 	//SaveGroupsToCheckToFile()
 	members := GetGroupMembers(group)
+	LeaveGroup(group)
 	return members
 }
