@@ -58,7 +58,7 @@ func HandleUser(user User) {
 	for _, group := range groups {
 		AddGroupToCheckId(group)
 	}
-	score := CringeRate(user)
+	score := CringeRate(&user)
 
 	if score != 0 {
 		SendEmbed(user, score)

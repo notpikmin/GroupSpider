@@ -4,6 +4,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -15,7 +16,7 @@ type CringeItem struct {
 	Score int
 }
 
-func CringeRate(user User) int {
+func CringeRate(user *User) int {
 	cringeScore := 0
 
 	bio := strings.ToLower(user.Bio)
@@ -23,6 +24,9 @@ func CringeRate(user User) int {
 	for _, keyword := range CringeMetric {
 		c := strings.Count(bio, strings.ToLower(keyword.Key))
 		cringeScore += c * keyword.Score
+		re := regexp.MustCompile(`(?i)` + keyword.Key)
+
+		user.Bio = re.ReplaceAllString(user.Bio, "__**"+keyword.Key+"**__")
 	}
 
 	return cringeScore
